@@ -5,7 +5,12 @@
       "Bash(mv puffy-pegasi/* .)",
       "Bash(mv puffy-pegasi/.* .)",
       "Bash(rmdir puffy-pegasi:*)",
-      "Bash(npx astro:*)"
+      "Bash(npx astro:*)",
+      "Bash(gh repo:*)",
+      "Bash(gh api:*)",
+      "WebFetch(domain:98.70.32.119)",
+      "Bash(az vm:*)",
+      "Bash(grep -l 'status: \"published\"' src/content/articles/*.mdx)"
     ]
   }
 }
