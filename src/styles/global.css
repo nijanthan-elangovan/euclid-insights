@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&family=Roboto+Slab:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply font-roboto text-euclid-gray-dark antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-poppins font-semibold;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center px-6 py-3 bg-gradient-to-r from-euclid-teal to-euclid-teal-deep text-white font-poppins font-medium rounded-full transition-all duration-200 hover:shadow-lg hover:shadow-euclid-teal/30 hover:-translate-y-0.5;
+  }
+  .btn-outline {
+    @apply inline-flex items-center px-6 py-3 border-2 border-euclid-teal text-euclid-teal font-poppins font-medium rounded-full transition-all duration-200 hover:bg-euclid-teal hover:text-white;
+  }
+  .tag-pill {
+    @apply inline-block px-3 py-1 text-xs font-poppins font-medium rounded-full bg-euclid-cyan text-euclid-teal-dark transition-colors hover:bg-euclid-teal hover:text-white;
+  }
+  .category-badge {
+    @apply inline-block px-4 py-1.5 text-xs font-poppins font-semibold uppercase tracking-wider rounded-full;
+  }
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  }
+  .stat-card {
+    @apply bg-white rounded-xl p-6 text-center border border-gray-100 shadow-sm;
+  }
+  .quote-block {
+    @apply border-l-4 border-euclid-teal bg-euclid-cyan/30 p-6 rounded-r-xl my-8 italic font-roboto-slab text-euclid-teal-dark;
+  }
+  .info-table {
+    @apply w-full border-collapse rounded-xl overflow-hidden shadow-sm;
+  }
+  .info-table thead {
+    @apply bg-euclid-navy text-white;
+  }
+  .info-table th {
+    @apply px-6 py-4 text-left font-poppins font-semibold text-sm uppercase tracking-wider;
+  }
+  .info-table td {
+    @apply px-6 py-4 border-b border-gray-100;
+  }
+  .info-table tbody tr:hover {
+    @apply bg-euclid-gray-light;
+  }
+}
+
+/* Article prose styles */
+.prose-euclid h2 {
+  @apply text-2xl md:text-3xl font-poppins font-semibold text-euclid-navy mt-12 mb-4 pb-2 border-b border-gray-100;
+}
+.prose-euclid h3 {
+  @apply text-xl md:text-2xl font-poppins font-semibold text-euclid-teal-dark mt-8 mb-3;
+}
+.prose-euclid p {
+  @apply text-base leading-relaxed text-gray-700 mb-4 font-roboto;
+}
+.prose-euclid ul, .prose-euclid ol {
+  @apply mb-6 pl-6 space-y-2;
+}
+.prose-euclid li {
+  @apply text-gray-700 leading-relaxed;
+}
+.prose-euclid strong {
+  @apply text-euclid-gray-dark font-semibold;
+}
+.prose-euclid a {
+  @apply text-euclid-teal underline decoration-euclid-teal/30 hover:decoration-euclid-teal transition-colors;
+}
+.prose-euclid blockquote {
+  @apply quote-block;
+}
+.prose-euclid img {
+  @apply rounded-xl shadow-md my-8;
+}
+
+/* Animated gradient background */
+.gradient-bg {
+  background: linear-gradient(135deg, #014745 0%, #273171 50%, #0AB3B3 100%);
+}
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-euclid-teal to-euclid-navy;
+}
+
+/* Infographic counter animation */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-count {
+  animation: countUp 0.6s ease-out forwards;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { @apply bg-gray-100; }
+::-webkit-scrollbar-thumb { @apply bg-euclid-teal/40 rounded-full; }
+::-webkit-scrollbar-thumb:hover { @apply bg-euclid-teal; }

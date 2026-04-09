@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles', ({ data }) => data.status === 'published');
+  const tags = [...new Set(articles.flatMap(a => a.data.tags.map(t => t.toLowerCase().replace(/\s+/g, '-'))))];
+  return tags.map(tag => ({
+    params: { tag },
+    props: {
+      tagName: tag,
+      articles: articles
+        .filter(a => a.data.tags.some(t => t.toLowerCase().replace(/\s+/g, '-') === tag))
+        .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()),
+    },
+  }));
+}
+
+const { tag } = Astro.params;
+const { articles, tagName } = Astro.props;
+---
+
+<BaseLayout title={`Articles tagged "${tagName}"`}>
+  <section class="gradient-bg py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <a href="/" class="text-white/60 text-sm font-poppins hover:text-white transition-colors mb-4 inline-block">&larr; Back to all articles</a>
+      <h1 class="text-3xl md:text-4xl font-poppins font-bold text-white">
+        <span class="text-euclid-cyan">#</span>{tagName}
+      </h1>
+      <p class="text-white/60 mt-3 font-roboto">{articles.length} article{articles.length !== 1 ? 's' : ''}</p>
+    </div>
+  </section>
+
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {articles.map((article) => (
+        <ArticleCard
+          title={article.data.title}
+          description={article.data.description}
+          pubDate={article.data.pubDate}
+          category={article.data.category}
+          tags={article.data.tags}
+          coverImage={article.data.coverImage}
+          readTime={article.data.readTime}
+          slug={article.id}
+        />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:euclidinnovations.com)",
+      "Bash(mv puffy-pegasi/* .)",
+      "Bash(mv puffy-pegasi/.* .)",
+      "Bash(rmdir puffy-pegasi:*)",
+      "Bash(npx astro:*)"
+    ]
+  }
+}

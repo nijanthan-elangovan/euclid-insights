@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles', ({ data }) => data.status === 'published');
+  const categories = [...new Set(articles.map(a => a.data.category))];
+  return categories.map(category => ({
+    params: { category },
+    props: {
+      articles: articles
+        .filter(a => a.data.category === category)
+        .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()),
+    },
+  }));
+}
+
+const { category } = Astro.params;
+const { articles } = Astro.props;
+
+const categoryNames: Record<string, string> = {
+  'ai-ml': 'AI & ML in Banking',
+  'digital-transformation': 'Digital Transformation',
+  'cloud': 'Cloud Enablement',
+  'cybersecurity': 'Cybersecurity & AI',
+  'talent': 'AI Talent & Staffing',
+};
+
+const categoryName = categoryNames[category!] || category;
+---
+
+<BaseLayout title={`${categoryName} Articles`} description={`Read our latest insights on ${categoryName}`}>
+  <section class="gradient-bg py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <a href="/" class="text-white/60 text-sm font-poppins hover:text-white transition-colors mb-4 inline-block">&larr; Back to all articles</a>
+      <h1 class="text-3xl md:text-5xl font-poppins font-bold text-white">{categoryName}</h1>
+      <p class="text-white/60 mt-3 font-roboto">{articles.length} article{articles.length !== 1 ? 's' : ''}</p>
+    </div>
+  </section>
+
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {articles.map((article) => (
+        <ArticleCard
+          title={article.data.title}
+          description={article.data.description}
+          pubDate={article.data.pubDate}
+          category={article.data.category}
+          tags={article.data.tags}
+          coverImage={article.data.coverImage}
+          readTime={article.data.readTime}
+          slug={article.id}
+        />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

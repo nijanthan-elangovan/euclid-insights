@@ -1,0 +1,22 @@
+---
+import { getCollection, render } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles', ({ data }) => {
+    return (data.status === 'review' || data.status === 'draft' || data.status === 'scheduled') && data.previewToken;
+  });
+  return articles.map((article) => ({
+    params: { token: article.data.previewToken },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+const { Content, headings } = await render(article);
+const previewData = { ...article.data, status: 'review' as const };
+---
+
+<ArticleLayout frontmatter={previewData} headings={headings}>
+  <Content />
+</ArticleLayout>

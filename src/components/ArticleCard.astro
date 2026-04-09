@@ -1,0 +1,81 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  category: string;
+  tags?: string[];
+  coverImage?: string;
+  readTime?: string;
+  slug: string;
+  featured?: boolean;
+}
+
+const { title, description, pubDate, category, tags = [], coverImage, readTime, slug, featured = false } = Astro.props;
+
+const categoryColors: Record<string, { bg: string; text: string; accent: string }> = {
+  'ai-ml': { bg: 'bg-blue-50', text: 'text-blue-700', accent: 'border-blue-200' },
+  'digital-transformation': { bg: 'bg-purple-50', text: 'text-purple-700', accent: 'border-purple-200' },
+  'cloud': { bg: 'bg-sky-50', text: 'text-sky-700', accent: 'border-sky-200' },
+  'cybersecurity': { bg: 'bg-red-50', text: 'text-red-700', accent: 'border-red-200' },
+  'talent': { bg: 'bg-green-50', text: 'text-green-700', accent: 'border-green-200' },
+};
+const colors = categoryColors[category] || { bg: 'bg-gray-50', text: 'text-gray-700', accent: 'border-gray-200' };
+
+const categoryIcons: Record<string, string> = {
+  'ai-ml': 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
+  'digital-transformation': 'M13 10V3L4 14h7v7l9-11h-7z',
+  'cloud': 'M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z',
+  'cybersecurity': 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z',
+  'talent': 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z',
+};
+const iconPath = categoryIcons[category] || categoryIcons['ai-ml'];
+---
+
+<a href={`/articles/${slug}`} class={`card group block ${featured ? 'md:col-span-2 md:grid md:grid-cols-2' : ''}`}>
+  <!-- Cover Image or Gradient -->
+  <div class={`relative overflow-hidden ${featured ? 'h-64 md:h-full' : 'h-48'}`}>
+    {coverImage ? (
+      <img src={coverImage} alt={title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+    ) : (
+      <div class={`w-full h-full gradient-bg flex items-center justify-center`}>
+        <svg class="w-16 h-16 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={iconPath}/>
+        </svg>
+      </div>
+    )}
+    <div class="absolute top-4 left-4">
+      <span class={`category-badge ${colors.bg} ${colors.text}`}>
+        {category.replace(/-/g, ' ')}
+      </span>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class={`p-6 ${featured ? 'flex flex-col justify-center' : ''}`}>
+    <div class="flex items-center gap-3 text-xs text-gray-400 font-poppins mb-3">
+      <time datetime={pubDate.toISOString()}>
+        {pubDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+      </time>
+      {readTime && (
+        <>
+          <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+          <span>{readTime}</span>
+        </>
+      )}
+    </div>
+    <h3 class={`font-poppins font-semibold text-euclid-navy group-hover:text-euclid-teal transition-colors leading-snug mb-3 ${featured ? 'text-2xl' : 'text-lg'}`}>
+      {title}
+    </h3>
+    <p class={`text-gray-500 text-sm leading-relaxed mb-4 ${featured ? 'line-clamp-4' : 'line-clamp-2'}`}>
+      {description}
+    </p>
+    {tags.length > 0 && (
+      <div class="flex flex-wrap gap-1.5 mt-auto">
+        {tags.slice(0, 3).map((tag) => (
+          <span class="text-xs font-poppins text-gray-400 bg-gray-50 px-2 py-0.5 rounded">{tag}</span>
+        ))}
+      </div>
+    )}
+  </div>
+</a>
