@@ -13,7 +13,7 @@ interface Props {
 const {
   title,
   description = 'Insights on AI, Cloud, Cybersecurity & Digital Transformation from Euclid Innovations',
-  ogImage = '/images/og/default-og.png',
+  ogImage = 'https://euclidinnovations.com/wp-content/uploads/2023/06/Logo-Icon-Transparent-BG.png',
   ogType = 'website',
   canonicalUrl,
   noIndex = false,
@@ -54,7 +54,8 @@ const canonical = canonicalUrl || Astro.url.href;
     <meta name="twitter:image" content={fullOgImage} />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/images/favicon.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
     <!-- RSS -->
     <link rel="alternate" type="application/rss+xml" title="Euclid Insights RSS" href="/rss.xml" />
