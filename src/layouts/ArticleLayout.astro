@@ -23,37 +23,41 @@ interface Props {
     status?: string;
   };
   headings: { depth: number; slug: string; text: string }[];
+  previewSession?: {
+    email: string;
+    name: string;
+  };
 }
 
-const { frontmatter, headings } = Astro.props;
+const { frontmatter, headings, previewSession } = Astro.props;
 const categoryColors: Record<string, string> = {
   'ai-ml': 'bg-blue-100 text-blue-800',
   'digital-transformation': 'bg-purple-100 text-purple-800',
-  'cloud': 'bg-sky-100 text-sky-800',
-  'cybersecurity': 'bg-red-100 text-red-800',
-  'talent': 'bg-green-100 text-green-800',
+  cloud: 'bg-sky-100 text-sky-800',
+  cybersecurity: 'bg-red-100 text-red-800',
+  talent: 'bg-green-100 text-green-800',
 };
 const catColor = categoryColors[frontmatter.category] || 'bg-gray-100 text-gray-800';
 const pubDate = new Date(frontmatter.pubDate);
 const articleUrl = Astro.url.href;
 
 const articleSchema = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": frontmatter.title,
-  "description": frontmatter.description,
-  "image": frontmatter.coverImage || frontmatter.ogImage,
-  "datePublished": pubDate.toISOString(),
-  "author": {
-    "@type": "Organization",
-    "name": frontmatter.author,
-    "url": "https://euclidinnovations.com"
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: frontmatter.title,
+  description: frontmatter.description,
+  image: frontmatter.coverImage || frontmatter.ogImage,
+  datePublished: pubDate.toISOString(),
+  author: {
+    '@type': 'Organization',
+    name: frontmatter.author,
+    url: 'https://euclidinnovations.com',
   },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Euclid Innovations",
-    "logo": "https://euclidinnovations.com/wp-content/uploads/2023/06/Logo-Icon-Transparent-BG.png"
-  }
+  publisher: {
+    '@type': 'Organization',
+    name: 'Euclid Innovations',
+    logo: 'https://euclidinnovations.com/wp-content/uploads/2023/06/Logo-Icon-Transparent-BG.png',
+  },
 };
 ---
 
@@ -62,11 +66,10 @@ const articleSchema = {
   description={frontmatter.seoDescription || frontmatter.description}
   ogImage={frontmatter.ogImage || frontmatter.coverImage}
   ogType="article"
+  noIndex={frontmatter.status === 'review'}
 >
-  <!-- Article Schema -->
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
 
-  <!-- Hero -->
   <section class="gradient-bg relative overflow-hidden">
     <div class="absolute inset-0 opacity-10">
       <div class="absolute top-10 left-10 w-72 h-72 bg-euclid-teal rounded-full blur-3xl"></div>
@@ -97,10 +100,8 @@ const articleSchema = {
     </div>
   </section>
 
-  <!-- Article Body -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-      <!-- Sidebar TOC (desktop) -->
       <aside class="hidden lg:block lg:col-span-3">
         <div class="sticky top-24">
           <TableOfContents headings={headings} />
@@ -110,14 +111,30 @@ const articleSchema = {
         </div>
       </aside>
 
-      <!-- Content -->
       <article class="lg:col-span-9 max-w-none">
         {frontmatter.status === 'review' && (
-          <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-8 flex items-center gap-3">
-            <svg class="w-5 h-5 text-yellow-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-            </svg>
-            <span class="text-yellow-800 text-sm font-poppins font-medium">Preview Mode — This article is under review and not yet published.</span>
+          <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-8 flex items-start justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <svg class="w-5 h-5 text-yellow-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+              </svg>
+              <div>
+                <span class="block text-yellow-800 text-sm font-poppins font-medium">
+                  Preview Mode - This article is under review and not yet published.
+                </span>
+                {previewSession && (
+                  <span class="block text-yellow-700 text-xs font-poppins mt-1">
+                    Signed in as {previewSession.name} ({previewSession.email})
+                  </span>
+                )}
+              </div>
+            </div>
+            <a
+              href={`/auth/microsoft/logout?returnTo=${encodeURIComponent('/')}`}
+              class="shrink-0 text-xs font-poppins font-semibold text-yellow-800 hover:text-yellow-900"
+            >
+              Sign out
+            </a>
           </div>
         )}
 
@@ -125,7 +142,6 @@ const articleSchema = {
           <slot />
         </div>
 
-        <!-- Tags -->
         {frontmatter.tags.length > 0 && (
           <div class="mt-12 pt-8 border-t border-gray-100">
             <h4 class="font-poppins font-semibold text-sm text-gray-500 uppercase tracking-wider mb-3">Tags</h4>
@@ -137,10 +153,8 @@ const articleSchema = {
           </div>
         )}
 
-        <!-- Author Card -->
         <AuthorCard />
 
-        <!-- CTA -->
         <div class="mt-12 gradient-bg rounded-2xl p-8 md:p-12 text-center">
           <h3 class="text-2xl font-poppins font-bold text-white mb-3">Ready to transform your business with AI?</h3>
           <p class="text-white/80 mb-6 max-w-lg mx-auto">Schedule a consultation with our experts to explore how Euclid Innovations can accelerate your digital transformation journey.</p>
@@ -153,9 +167,7 @@ const articleSchema = {
     </div>
   </div>
 
-  <!-- Mobile Share -->
   <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 z-40">
     <ShareButtons url={articleUrl} title={frontmatter.title} inline={true} />
   </div>
-
 </BaseLayout>

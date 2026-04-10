@@ -1,16 +1,19 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
+import node from '@astrojs/node';
 import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
   site: 'https://insights.euclidinnovations.com',
+  adapter: node({
+    mode: 'standalone',
+  }),
   integrations: [
     mdx(),
     sitemap(),
     tailwind(),
   ],
-  output: 'static',
   markdown: {
     shikiConfig: {
       theme: 'github-light',

@@ -1,43 +1,34 @@
-# Astro Starter Kit: Minimal
+# Euclid Insights
 
-```sh
-npm create astro@latest -- --template minimal
-```
+Astro site for Euclid Insights articles and category pages.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Commands
 
-## 🚀 Project Structure
+| Command | Action |
+| :--- | :--- |
+| `npm install` | Install dependencies |
+| `npm run dev` | Start local development server |
+| `npm run build` | Build the production bundle |
+| `npm run preview` | Run the built site locally |
 
-Inside of your Astro project, you'll see the following folders and files:
+## Microsoft SSO Preview Access
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+Preview article routes under `/preview/[token]` are protected by Microsoft SSO.
+Published article routes remain prerendered, while preview routes are server-rendered so draft content is not emitted into the static build output.
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+### Setup
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+1. Copy `.env.example` to `.env`.
+2. Set `MICROSOFT_CLIENT_SECRET`.
+3. Set `MICROSOFT_SESSION_SECRET` to a long random string.
+4. In Azure App Registration, add the redirect URI:
+   `https://insights.euclidinnovations.com/auth/microsoft/callback`
+5. Optionally tighten access with `MICROSOFT_ALLOWED_EMAILS` or `MICROSOFT_ALLOWED_EMAIL_DOMAINS`.
 
-Any static assets, like images, can be placed in the `public/` directory.
+### Azure values currently expected
 
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+| Variable | Value |
+| :--- | :--- |
+| `MICROSOFT_CLIENT_ID` | `da987626-0952-4a64-9fc1-bf50159b2950` |
+| `MICROSOFT_TENANT_ID` | `8d2ffdf3-3715-4309-a394-1e123d08feca` |
+| `MICROSOFT_ALLOWED_TENANT_ID` | `8d2ffdf3-3715-4309-a394-1e123d08feca` |

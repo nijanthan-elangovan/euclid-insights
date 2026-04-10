@@ -1,22 +1,40 @@
 ---
 import { getCollection, render } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { assertMicrosoftPreviewConfig, getPreviewSession } from '../../lib/microsoft-auth';
 
-export async function getStaticPaths() {
-  const articles = await getCollection('articles', ({ data }) => {
-    return (data.status === 'review' || data.status === 'draft' || data.status === 'scheduled') && data.previewToken;
-  });
-  return articles.map((article) => ({
-    params: { token: article.data.previewToken },
-    props: { article },
-  }));
+export const prerender = false;
+
+try {
+  assertMicrosoftPreviewConfig();
+} catch (configError) {
+  return new Response((configError as Error).message, { status: 500 });
 }
 
-const { article } = Astro.props;
+const session = getPreviewSession(Astro.cookies);
+if (!session) {
+  const loginUrl = new URL('/auth/microsoft/login', Astro.url);
+  loginUrl.searchParams.set('returnTo', Astro.url.pathname);
+  return Astro.redirect(`${loginUrl.pathname}${loginUrl.search}`);
+}
+
+const previewToken = Astro.params.token;
+const previewArticles = await getCollection('articles', ({ data }) => {
+  return (
+    (data.status === 'review' || data.status === 'draft' || data.status === 'scheduled') &&
+    data.previewToken === previewToken
+  );
+});
+const article = previewArticles[0];
+
+if (!article) {
+  return new Response('Preview article not found', { status: 404 });
+}
+
 const { Content, headings } = await render(article);
 const previewData = { ...article.data, status: 'review' as const };
 ---
 
-<ArticleLayout frontmatter={previewData} headings={headings}>
+<ArticleLayout frontmatter={previewData} headings={headings} previewSession={session}>
   <Content />
 </ArticleLayout>
