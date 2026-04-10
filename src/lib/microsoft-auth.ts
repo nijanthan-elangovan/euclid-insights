@@ -31,7 +31,7 @@ const SESSION_DURATION_SECONDS = 60 * 60 * 8;
 const OAUTH_COOKIE_MAX_AGE = 60 * 10;
 
 function getRequiredEnv(name: string) {
-  const value = import.meta.env[name];
+  const value = process.env[name];
   if (!value) {
     throw new Error(`Missing required environment variable: ${name}`);
   }
@@ -39,7 +39,7 @@ function getRequiredEnv(name: string) {
 }
 
 function getOptionalEnv(name: string) {
-  return import.meta.env[name]?.trim();
+  return process.env[name]?.trim();
 }
 
 function getSessionSecret() {

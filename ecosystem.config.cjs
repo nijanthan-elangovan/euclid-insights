@@ -3,6 +3,7 @@ module.exports = {
     {
       name: 'euclid-insights',
       script: './dist/server/entry.mjs',
+      node_args: '--env-file=.env',
       env: {
         HOST: '0.0.0.0',
         PORT: 4321,
