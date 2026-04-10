@@ -1,0 +1,143 @@
+---
+interface Props {
+  slug: string;
+  currentStatus: string;
+  currentPubDate: string;
+  currentPreviewToken: string;
+}
+
+const { slug, currentStatus, currentPubDate, currentPreviewToken } = Astro.props;
+---
+
+<div id="admin-panel" class="fixed right-0 bottom-20 z-40 flex" data-slug={slug}>
+  <!-- Toggle tab -->
+  <button
+    id="admin-toggle"
+    class="self-end bg-indigo-600 text-white px-2 py-3 rounded-l-lg shadow-lg hover:bg-indigo-700 transition-colors"
+    style="writing-mode: vertical-lr; text-orientation: mixed;"
+    aria-label="Toggle admin panel"
+  >
+    <span class="text-xs font-poppins font-semibold tracking-wider">ADMIN</span>
+  </button>
+
+  <!-- Panel body -->
+  <div id="admin-body" class="w-80 bg-white border border-gray-200 rounded-l-xl shadow-2xl flex flex-col overflow-hidden transition-all duration-200">
+    <div class="p-4 border-b border-gray-100 bg-indigo-50">
+      <h3 class="font-poppins font-semibold text-sm text-indigo-900">Admin Controls</h3>
+      <p class="text-xs text-indigo-600 mt-1 font-mono">{slug}.mdx</p>
+    </div>
+
+    <div class="p-4 space-y-4">
+      <!-- Status -->
+      <div>
+        <label class="block text-xs font-poppins font-semibold text-gray-600 uppercase tracking-wider mb-1">Status</label>
+        <select id="admin-status" class="w-full border border-gray-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <option value="draft" selected={currentStatus === 'draft'}>Draft</option>
+          <option value="review" selected={currentStatus === 'review'}>Review</option>
+          <option value="scheduled" selected={currentStatus === 'scheduled'}>Scheduled</option>
+          <option value="published" selected={currentStatus === 'published'}>Published</option>
+        </select>
+      </div>
+
+      <!-- Publish Date -->
+      <div>
+        <label class="block text-xs font-poppins font-semibold text-gray-600 uppercase tracking-wider mb-1">Publish Date</label>
+        <input
+          id="admin-pubdate"
+          type="date"
+          value={currentPubDate}
+          class="w-full border border-gray-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+      </div>
+
+      <!-- Preview Token -->
+      <div>
+        <label class="block text-xs font-poppins font-semibold text-gray-600 uppercase tracking-wider mb-1">Preview Token</label>
+        <input
+          id="admin-token"
+          type="text"
+          value={currentPreviewToken}
+          class="w-full border border-gray-200 rounded-lg p-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+      </div>
+
+      <!-- Quick actions -->
+      <div>
+        <label class="block text-xs font-poppins font-semibold text-gray-600 uppercase tracking-wider mb-2">Quick Actions</label>
+        <div class="grid grid-cols-3 gap-2">
+          <button class="admin-quick-action py-2 bg-emerald-600 text-white rounded-lg text-xs font-poppins font-semibold hover:bg-emerald-700 transition-colors" data-status="published">
+            Publish
+          </button>
+          <button class="admin-quick-action py-2 bg-amber-500 text-white rounded-lg text-xs font-poppins font-semibold hover:bg-amber-600 transition-colors" data-status="scheduled">
+            Schedule
+          </button>
+          <button class="admin-quick-action py-2 bg-gray-500 text-white rounded-lg text-xs font-poppins font-semibold hover:bg-gray-600 transition-colors" data-status="draft">
+            Unpublish
+          </button>
+        </div>
+      </div>
+
+      <!-- Save all -->
+      <button
+        id="admin-save"
+        class="w-full py-2 bg-indigo-600 text-white rounded-lg text-sm font-poppins font-semibold hover:bg-indigo-700 transition-colors"
+      >
+        Save All Changes
+      </button>
+      <p id="admin-message" class="text-xs font-poppins text-center hidden"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const panel = document.getElementById('admin-panel')!;
+  const body = document.getElementById('admin-body')!;
+  const toggle = document.getElementById('admin-toggle')!;
+  const slug = panel.dataset.slug!;
+
+  let collapsed = false;
+  toggle.addEventListener('click', () => {
+    collapsed = !collapsed;
+    body.classList.toggle('hidden', collapsed);
+  });
+
+  async function saveAdmin(payload: Record<string, string>) {
+    const msg = document.getElementById('admin-message')!;
+    try {
+      const res = await fetch(`/api/admin/${slug}`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      msg.classList.remove('hidden', 'text-red-600', 'text-emerald-600');
+      if (res.ok) {
+        msg.textContent = 'Saved! Rebuild needed to apply.';
+        msg.classList.add('text-emerald-600');
+      } else {
+        msg.textContent = data.error || 'Failed to save';
+        msg.classList.add('text-red-600');
+      }
+    } catch {
+      msg.classList.remove('hidden');
+      msg.textContent = 'Network error';
+      msg.classList.add('text-red-600');
+    }
+    setTimeout(() => msg.classList.add('hidden'), 4000);
+  }
+
+  document.getElementById('admin-save')!.addEventListener('click', async () => {
+    const status = (document.getElementById('admin-status') as HTMLSelectElement).value;
+    const pubDate = (document.getElementById('admin-pubdate') as HTMLInputElement).value;
+    const previewToken = (document.getElementById('admin-token') as HTMLInputElement).value;
+    await saveAdmin({ status, pubDate, previewToken });
+  });
+
+  document.querySelectorAll('.admin-quick-action').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const newStatus = (btn as HTMLElement).dataset.status!;
+      (document.getElementById('admin-status') as HTMLSelectElement).value = newStatus;
+      await saveAdmin({ status: newStatus });
+    });
+  });
+</script>

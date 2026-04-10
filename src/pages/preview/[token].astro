@@ -1,7 +1,10 @@
 ---
 import { getCollection, render } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import ReviewPanel from '../../components/ReviewPanel.astro';
+import AdminPanel from '../../components/AdminPanel.astro';
 import { assertMicrosoftPreviewConfig, getPreviewSession } from '../../lib/microsoft-auth';
+import { getUserRole, getReview } from '../../lib/store';
 
 export const prerender = false;
 
@@ -33,8 +36,29 @@ if (!article) {
 
 const { Content, headings } = await render(article);
 const previewData = { ...article.data, status: 'review' as const };
+const role = getUserRole(session.email);
+const review = getReview(article.slug);
+const pubDateStr = new Date(article.data.pubDate).toISOString().split('T')[0];
 ---
 
-<ArticleLayout frontmatter={previewData} headings={headings} previewSession={session}>
+<ArticleLayout frontmatter={previewData} headings={headings} previewSession={session} showPanels={true}>
   <Content />
+
+  <Fragment slot="panels">
+    <ReviewPanel
+      slug={article.slug}
+      userEmail={session.email}
+      userName={session.name}
+      initialReview={review}
+    />
+
+    {role === 'admin' && (
+      <AdminPanel
+        slug={article.slug}
+        currentStatus={article.data.status || 'draft'}
+        currentPubDate={pubDateStr}
+        currentPreviewToken={article.data.previewToken || ''}
+      />
+    )}
+  </Fragment>
 </ArticleLayout>

@@ -17,6 +17,9 @@ pnpm-debug.log*
 .env
 .env.production
 
+# review data (dynamic, created at runtime)
+data/reviews/
+
 # macOS-specific files
 .DS_Store
 

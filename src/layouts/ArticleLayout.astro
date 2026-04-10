@@ -27,9 +27,10 @@ interface Props {
     email: string;
     name: string;
   };
+  showPanels?: boolean;
 }
 
-const { frontmatter, headings, previewSession } = Astro.props;
+const { frontmatter, headings, previewSession, showPanels = false } = Astro.props;
 const categoryColors: Record<string, string> = {
   'ai-ml': 'bg-blue-100 text-blue-800',
   'digital-transformation': 'bg-purple-100 text-purple-800',
@@ -170,4 +171,6 @@ const articleSchema = {
   <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 z-40">
     <ShareButtons url={articleUrl} title={frontmatter.title} inline={true} />
   </div>
+
+  {showPanels && <slot name="panels" />}
 </BaseLayout>

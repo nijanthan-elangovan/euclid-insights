@@ -1,0 +1,6 @@
+{
+  "roles": {
+    "nijanthan@euclidinnovations.com": "admin"
+  },
+  "defaultRole": "reviewer"
+}
