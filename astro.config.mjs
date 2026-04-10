@@ -8,6 +8,7 @@ export default defineConfig({
   site: 'https://insights.euclidinnovations.com',
   adapter: node({
     mode: 'standalone',
+    allowedDomains: ['insights.euclidinnovations.com'],
   }),
   integrations: [
     mdx(),
