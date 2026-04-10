@@ -42,6 +42,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            export PATH=/usr/bin:/usr/local/bin:$PATH
             cd /home/azureuser/euclid-insights
             npm install --omit=dev --ignore-scripts
             pm2 describe euclid-insights > /dev/null 2>&1 \
