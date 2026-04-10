@@ -45,7 +45,6 @@ jobs:
             export PATH=/usr/bin:/usr/local/bin:$PATH
             cd /home/azureuser/euclid-insights
             npm install --omit=dev --ignore-scripts
-            pm2 describe euclid-insights > /dev/null 2>&1 \
-              && pm2 restart euclid-insights \
-              || pm2 start ecosystem.config.cjs
+            pm2 delete euclid-insights 2>/dev/null || true
+            pm2 start ecosystem.config.cjs
             pm2 save
