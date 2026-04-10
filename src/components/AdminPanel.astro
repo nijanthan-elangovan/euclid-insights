@@ -9,11 +9,11 @@ interface Props {
 const { slug, currentStatus, currentPubDate, currentPreviewToken } = Astro.props;
 ---
 
-<div id="admin-panel" class="fixed right-0 bottom-20 z-40 flex" data-slug={slug}>
+<div id="admin-panel" class="fixed right-0 bottom-24 md:bottom-20 z-[70] flex pointer-events-none" data-slug={slug}>
   <!-- Toggle tab -->
   <button
     id="admin-toggle"
-    class="self-end bg-indigo-600 text-white px-2 py-3 rounded-l-lg shadow-lg hover:bg-indigo-700 transition-colors"
+    class="self-end bg-indigo-600 text-white px-2 py-3 rounded-l-lg shadow-lg hover:bg-indigo-700 transition-colors pointer-events-auto"
     style="writing-mode: vertical-lr; text-orientation: mixed;"
     aria-label="Toggle admin panel"
   >
@@ -21,13 +21,13 @@ const { slug, currentStatus, currentPubDate, currentPreviewToken } = Astro.props
   </button>
 
   <!-- Panel body -->
-  <div id="admin-body" class="w-80 bg-white border border-gray-200 rounded-l-xl shadow-2xl flex flex-col overflow-hidden transition-all duration-200">
+  <div id="admin-body" class="w-80 max-h-[calc(100vh-6rem)] bg-white border border-gray-200 rounded-l-xl shadow-2xl flex flex-col overflow-hidden transition-all duration-200 pointer-events-auto">
     <div class="p-4 border-b border-gray-100 bg-indigo-50">
       <h3 class="font-poppins font-semibold text-sm text-indigo-900">Admin Controls</h3>
       <p class="text-xs text-indigo-600 mt-1 font-mono">{slug}.mdx</p>
     </div>
 
-    <div class="p-4 space-y-4">
+    <div class="p-4 space-y-4 overflow-y-auto">
       <!-- Status -->
       <div>
         <label class="block text-xs font-poppins font-semibold text-gray-600 uppercase tracking-wider mb-1">Status</label>
