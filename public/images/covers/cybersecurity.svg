@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feBlend in="SourceGraphic" mode="multiply" result="blend"/>
+    </filter>
+  </defs>
+  <g>
+    <!-- Background -->
+    <rect width="800" height="450" fill="#FCDADA"/>
+    <!-- Shield shape -->
+    <path d="M400,60 L540,120 L540,260 Q540,360 400,400 Q260,360 260,260 L260,120 Z" fill="#E85C5C"/>
+    <!-- Inner shield -->
+    <path d="M400,100 L500,145 L500,250 Q500,330 400,360 Q300,330 300,250 L300,145 Z" fill="#D14545"/>
+    <!-- Lock body -->
+    <rect x="365" y="210" width="70" height="60" rx="8" fill="#FCDADA"/>
+    <!-- Lock shackle -->
+    <path d="M380,210 L380,185 Q380,160 400,160 Q420,160 420,185 L420,210" fill="none" stroke="#FCDADA" stroke-width="10" stroke-linecap="round"/>
+    <!-- Keyhole -->
+    <circle cx="400" cy="235" r="10" fill="#D14545"/>
+    <rect x="396" y="235" width="8" height="18" rx="2" fill="#D14545"/>
+    <!-- Scanning lines -->
+    <line x1="150" y1="120" x2="250" y2="120" stroke="#E88A8A" stroke-width="3" opacity="0.6"/>
+    <line x1="130" y1="150" x2="230" y2="150" stroke="#E88A8A" stroke-width="2" opacity="0.4"/>
+    <line x1="160" y1="180" x2="240" y2="180" stroke="#E88A8A" stroke-width="2" opacity="0.4"/>
+    <line x1="550" y1="140" x2="670" y2="140" stroke="#E88A8A" stroke-width="3" opacity="0.6"/>
+    <line x1="570" y1="170" x2="660" y2="170" stroke="#E88A8A" stroke-width="2" opacity="0.4"/>
+    <line x1="560" y1="200" x2="650" y2="200" stroke="#E88A8A" stroke-width="2" opacity="0.4"/>
+    <!-- Alert nodes -->
+    <circle cx="160" cy="300" r="30" fill="#E85C5C" opacity="0.5"/>
+    <circle cx="160" cy="300" r="15" fill="#D14545" opacity="0.7"/>
+    <circle cx="640" cy="320" r="30" fill="#E85C5C" opacity="0.5"/>
+    <circle cx="640" cy="320" r="15" fill="#D14545" opacity="0.7"/>
+    <!-- Connection lines to shield -->
+    <line x1="190" y1="300" x2="260" y2="260" stroke="#E85C5C" stroke-width="2" opacity="0.5"/>
+    <line x1="610" y1="320" x2="540" y2="280" stroke="#E85C5C" stroke-width="2" opacity="0.5"/>
+    <!-- Decorative -->
+    <circle cx="700" cy="80" r="50" fill="#E88A8A" opacity="0.4"/>
+    <circle cx="80" cy="400" r="60" fill="#E88A8A" opacity="0.3"/>
+    <rect x="600" y="390" width="120" height="40" rx="16" fill="#D14545" opacity="0.3"/>
+    <!-- Grain overlay -->
+    <rect width="800" height="450" filter="url(#grain)" opacity="0.15"/>
+  </g>
+</svg>

@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feBlend in="SourceGraphic" mode="multiply" result="blend"/>
+    </filter>
+  </defs>
+  <g>
+    <!-- Background -->
+    <rect width="800" height="450" fill="#FCE0D0"/>
+    <!-- Factory/pipeline visualization -->
+    <!-- Input funnel (left) -->
+    <polygon points="100,120 220,160 220,300 100,340" fill="#E87C4A"/>
+    <polygon points="120,150 200,175 200,285 120,310" fill="#D46030"/>
+    <!-- Small idea dots entering -->
+    <circle cx="80" cy="180" r="12" fill="#E8A07C" opacity="0.7"/>
+    <circle cx="60" cy="230" r="10" fill="#E8A07C" opacity="0.6"/>
+    <circle cx="75" cy="280" r="11" fill="#E8A07C" opacity="0.5"/>
+    <!-- Pipeline segments -->
+    <rect x="220" y="200" width="120" height="60" rx="8" fill="#D46030"/>
+    <rect x="360" y="200" width="120" height="60" rx="8" fill="#C04E20"/>
+    <rect x="500" y="200" width="120" height="60" rx="8" fill="#A83D15"/>
+    <!-- Pipeline labels (gears/icons) -->
+    <circle cx="280" cy="230" r="18" fill="#FCE0D0"/>
+    <circle cx="280" cy="230" r="10" fill="#D46030"/>
+    <circle cx="420" cy="230" r="18" fill="#FCE0D0"/>
+    <circle cx="420" cy="230" r="10" fill="#C04E20"/>
+    <circle cx="560" cy="230" r="18" fill="#FCE0D0"/>
+    <circle cx="560" cy="230" r="10" fill="#A83D15"/>
+    <!-- Arrow connectors -->
+    <polygon points="340,215 355,230 340,245" fill="#E8A07C"/>
+    <polygon points="480,215 495,230 480,245" fill="#E8A07C"/>
+    <!-- Output - production rocket -->
+    <rect x="640" y="160" width="60" height="140" rx="30" fill="#A83D15"/>
+    <polygon points="640,160 670,100 700,160" fill="#C04E20"/>
+    <!-- Rocket flames -->
+    <polygon points="650,300 670,340 690,300" fill="#E87C4A" opacity="0.7"/>
+    <polygon points="655,300 670,330 685,300" fill="#FCE0D0" opacity="0.5"/>
+    <!-- Window on rocket -->
+    <circle cx="670" cy="200" r="12" fill="#FCE0D0"/>
+    <circle cx="670" cy="200" r="7" fill="#D46030"/>
+    <!-- Scale indicator (graph going up) -->
+    <polyline points="120,400 250,380 380,350 510,300 640,160" fill="none" stroke="#E87C4A" stroke-width="4" opacity="0.4"/>
+    <!-- Decorative -->
+    <circle cx="720" cy="380" r="50" fill="#E8A07C" opacity="0.3"/>
+    <circle cx="60" cy="80" r="40" fill="#E8A07C" opacity="0.3"/>
+    <rect x="300" y="380" width="100" height="30" rx="15" fill="#D46030" opacity="0.3"/>
+    <!-- Grain overlay -->
+    <rect width="800" height="450" filter="url(#grain)" opacity="0.15"/>
+  </g>
+</svg>

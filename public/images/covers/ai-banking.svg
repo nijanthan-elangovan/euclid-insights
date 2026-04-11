@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feBlend in="SourceGraphic" mode="multiply" result="blend"/>
+    </filter>
+    <clipPath id="clip"><rect width="800" height="450"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+    <!-- Background -->
+    <rect width="800" height="450" fill="#E8D5F5"/>
+    <!-- Large circle top right -->
+    <circle cx="620" cy="80" r="160" fill="#C9A0E8" opacity="0.7"/>
+    <!-- Bank/building shape -->
+    <rect x="180" y="140" width="240" height="200" rx="24" fill="#A06CD5"/>
+    <!-- Columns -->
+    <rect x="210" y="180" width="30" height="120" rx="6" fill="#D4B8EA"/>
+    <rect x="260" y="180" width="30" height="120" rx="6" fill="#D4B8EA"/>
+    <rect x="310" y="180" width="30" height="120" rx="6" fill="#D4B8EA"/>
+    <rect x="360" y="180" width="30" height="120" rx="6" fill="#D4B8EA"/>
+    <!-- Roof triangle -->
+    <polygon points="160,150 420,150 290,60" fill="#8B5CC8"/>
+    <!-- AI brain/circuit -->
+    <circle cx="560" cy="260" r="100" fill="#8B5CC8"/>
+    <circle cx="560" cy="260" r="60" fill="#A06CD5"/>
+    <!-- Neural nodes -->
+    <circle cx="530" cy="230" r="10" fill="#D4B8EA"/>
+    <circle cx="590" cy="230" r="10" fill="#D4B8EA"/>
+    <circle cx="560" cy="280" r="10" fill="#D4B8EA"/>
+    <circle cx="520" cy="270" r="8" fill="#E8D5F5"/>
+    <circle cx="600" cy="270" r="8" fill="#E8D5F5"/>
+    <!-- Connection lines -->
+    <line x1="530" y1="230" x2="590" y2="230" stroke="#D4B8EA" stroke-width="3"/>
+    <line x1="530" y1="230" x2="560" y2="280" stroke="#D4B8EA" stroke-width="3"/>
+    <line x1="590" y1="230" x2="560" y2="280" stroke="#D4B8EA" stroke-width="3"/>
+    <!-- Dollar sign -->
+    <text x="290" y="260" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="#E8D5F5" text-anchor="middle">$</text>
+    <!-- Connecting bar -->
+    <rect x="420" y="240" width="60" height="20" rx="10" fill="#C9A0E8"/>
+    <!-- Bottom shapes -->
+    <circle cx="140" cy="400" r="80" fill="#C9A0E8" opacity="0.5"/>
+    <rect x="600" y="380" width="180" height="80" rx="20" fill="#A06CD5" opacity="0.4"/>
+    <!-- Grain overlay -->
+    <rect width="800" height="450" filter="url(#grain)" opacity="0.15"/>
+  </g>
+</svg>
