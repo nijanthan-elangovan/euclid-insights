@@ -83,6 +83,14 @@
 .prose-euclid img {
   @apply rounded-xl shadow-md my-8;
 }
+/* Reset prose text colors inside dark-background sections */
+.prose-euclid .not-prose p,
+.prose-euclid .not-prose h4,
+.prose-euclid .not-prose h5,
+.prose-euclid .not-prose li,
+.prose-euclid .not-prose strong {
+  color: inherit;
+}
 
 /* Animated gradient background */
 .gradient-bg {
