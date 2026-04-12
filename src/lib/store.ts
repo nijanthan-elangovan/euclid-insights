@@ -10,7 +10,20 @@ import {
 import { join, dirname, extname, resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
+function resolveProjectRoot() {
+  const envRoot = process.env.EUCLID_INSIGHTS_ROOT?.trim();
+  if (envRoot) return resolve(envRoot);
+
+  const cwdRoot = process.cwd();
+  if (existsSync(join(cwdRoot, 'data', 'roles.json'))) {
+    return cwdRoot;
+  }
+
+  // Fallback for local source execution.
+  return join(dirname(fileURLToPath(import.meta.url)), '..', '..');
+}
+
+const ROOT = resolveProjectRoot();
 const DATA_DIR = join(ROOT, 'data');
 const REVIEWS_DIR = join(DATA_DIR, 'reviews');
 const ROLES_PATH = join(DATA_DIR, 'roles.json');
