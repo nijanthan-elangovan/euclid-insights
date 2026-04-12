@@ -20,7 +20,6 @@ const {
 } = Astro.props;
 
 const siteUrl = 'https://insights.euclidinnovations.com';
-const mainSite = 'https://euclidinnovations.com';
 const fullOgImage = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
 const canonical = canonicalUrl || Astro.url.href;
 ---
@@ -69,119 +68,41 @@ const canonical = canonicalUrl || Astro.url.href;
       "publisher": {
         "@type": "Organization",
         "name": "Euclid Innovations",
-        "url": mainSite,
+        "url": "https://euclidinnovations.com",
         "logo": "http://euclidinnovations.com/wp-content/uploads/2023/01/cropped-Logo-Icon-Transparent-shadow.png"
       }
     })} />
   </head>
   <body class="min-h-screen flex flex-col bg-white">
-    <!-- Top tagline bar -->
-    <div class="header-gradient-bg text-white text-center py-2.5">
-      <p class="font-poppins text-sm tracking-wide">Empowering change through impactful <strong class="font-semibold">innovations</strong></p>
-    </div>
-
-    <!-- Header — mirrors euclidinnovations.com -->
-    <header class="sticky top-0 z-50 bg-white border-b border-[#eaeaea]">
-      <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-[72px]">
-          <!-- Logo -->
-          <a href={mainSite} class="flex items-center gap-3 shrink-0">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <a href="/" class="flex items-center gap-3 group">
             <img
               src="https://euclidinnovations.com/wp-content/uploads/2023/06/Logo-Icon-Transparent-BG.png"
               alt="Euclid Innovations"
-              class="h-12 w-12"
+              class="h-9 w-9"
               loading="eager"
             />
-            <div class="hidden sm:flex flex-col leading-tight">
-              <div>
-                <span class="font-poppins font-bold text-[#1e293b] text-[17px] tracking-wide uppercase">Euclid</span>
-              </div>
-              <div>
-                <span class="font-poppins font-normal text-[#1e293b] text-[15px] tracking-wide lowercase">innovations</span>
-              </div>
-              <span class="font-poppins text-[8px] text-[#94a3b8] tracking-wider uppercase">Impactful Solutions | Projects | Consulting</span>
+            <div>
+              <span class="font-poppins font-semibold text-euclid-navy text-lg">Euclid</span>
+              <span class="font-poppins font-light text-euclid-teal text-lg ml-1">Insights</span>
             </div>
           </a>
 
           <!-- Desktop Nav -->
-          <nav class="hidden xl:flex items-center gap-0">
-            <!-- About Us -->
-            <div class="relative group">
-              <button class="nav-link flex items-center gap-1 uppercase">
-                About Us
-                <svg class="w-3 h-3 mt-0.5 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-              </button>
-              <div class="dropdown-menu">
-                <a href={`${mainSite}/pages/about-us/#vision`} class="dropdown-item">Our Vision</a>
-                <a href={`${mainSite}/pages/about-us/#team`} class="dropdown-item">Our Team</a>
-                <a href={`${mainSite}/pages/about-us/#backg`} class="dropdown-item">Our Background</a>
-              </div>
-            </div>
-
-            <!-- Industries -->
-            <div class="relative group">
-              <button class="nav-link flex items-center gap-1 uppercase">
-                Industries
-                <svg class="w-3 h-3 mt-0.5 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-              </button>
-              <div class="dropdown-menu">
-                <a href={`${mainSite}/pages/industries/#cm`} class="dropdown-item">Capital Markets</a>
-                <a href={`${mainSite}/pages/industries/#ib`} class="dropdown-item">Investment Banking</a>
-                <a href={`${mainSite}/pages/industries/#wm`} class="dropdown-item">Wealth Management</a>
-                <a href={`${mainSite}/pages/industries/#cb`} class="dropdown-item">Commercial Banking</a>
-                <a href={`${mainSite}/pages/industries/#pay`} class="dropdown-item">Payments</a>
-                <a href={`${mainSite}/pages/industries/#ins`} class="dropdown-item">Insurance</a>
-                <a href={`${mainSite}/pages/industries/#health`} class="dropdown-item">Healthcare</a>
-                <a href={`${mainSite}/pages/industries/#ret`} class="dropdown-item">Retail</a>
-              </div>
-            </div>
-
-            <!-- Expertise -->
-            <div class="relative group">
-              <button class="nav-link flex items-center gap-1 uppercase">
-                Expertise
-                <svg class="w-3 h-3 mt-0.5 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-              </button>
-              <div class="dropdown-menu">
-                <a href={`${mainSite}/expertise/ai-ml/`} class="dropdown-item">AI/ML</a>
-                <a href={`${mainSite}/expertise/banking-regulatory-risk/`} class="dropdown-item">Banking & Capital Markets</a>
-                <a href={`${mainSite}/expertise/cloud-migration/`} class="dropdown-item">Cloud Enablement</a>
-                <a href={`${mainSite}/expertise/digital-transformation/`} class="dropdown-item">Digital Transformation</a>
-                <a href={`${mainSite}/pages/emerging-talents/`} class="dropdown-item">Emerging Talent</a>
-                <a href={`${mainSite}/expertise/cyber-security/`} class="dropdown-item">Cyber Security</a>
-              </div>
-            </div>
-
-            <!-- Services -->
-            <div class="relative group">
-              <button class="nav-link flex items-center gap-1 uppercase">
-                Services
-                <svg class="w-3 h-3 mt-0.5 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-              </button>
-              <div class="dropdown-menu">
-                <a href={`${mainSite}/services/project-service/`} class="dropdown-item">Project Service</a>
-                <a href={`${mainSite}/services/staffing-services/`} class="dropdown-item">Staffing Service</a>
-                <a href={`${mainSite}/services/captive-offshore-service/`} class="dropdown-item">Captive Offshore Service</a>
-              </div>
-            </div>
-
-            <!-- Case Studies -->
-            <a href={`${mainSite}/case-studies/`} class="nav-link uppercase">Case Studies</a>
-
-            <!-- Careers with badge -->
-            <div class="relative">
-              <a href={`${mainSite}/pages/careers-in/`} class="nav-link uppercase">Careers</a>
-              <span class="absolute -top-1 left-1/2 -translate-x-1/2 bg-euclid-teal text-white text-[7px] font-poppins font-bold uppercase px-1.5 py-0.5 rounded-sm whitespace-nowrap leading-none">We're Hiring</span>
-            </div>
-
-            <!-- Contact Us button -->
-            <a href={`${mainSite}/pages/contactus/`} class="ml-3 inline-flex items-center px-5 py-2 bg-euclid-teal text-white font-poppins font-medium text-sm rounded-full hover:bg-euclid-teal-deep transition-colors">
-              Contact Us
-            </a>
+          <nav class="hidden md:flex items-center gap-8">
+            <a href="/" class="font-poppins text-sm font-medium text-gray-600 hover:text-euclid-teal transition-colors">Home</a>
+            <a href="/category/ai-ml" class="font-poppins text-sm font-medium text-gray-600 hover:text-euclid-teal transition-colors">AI & ML</a>
+            <a href="/category/cloud" class="font-poppins text-sm font-medium text-gray-600 hover:text-euclid-teal transition-colors">Cloud</a>
+            <a href="/category/cybersecurity" class="font-poppins text-sm font-medium text-gray-600 hover:text-euclid-teal transition-colors">Cybersecurity</a>
+            <a href="/category/talent" class="font-poppins text-sm font-medium text-gray-600 hover:text-euclid-teal transition-colors">Talent</a>
+            <a href="https://euclidinnovations.com/pages/contactus/" target="_blank" class="btn-primary text-sm">Get in Touch</a>
           </nav>
 
           <!-- Mobile menu button -->
-          <button id="mobile-menu-btn" class="xl:hidden p-2 text-[#334155] hover:text-euclid-teal" aria-label="Menu">
+          <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-600 hover:text-euclid-teal" aria-label="Menu">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
             </svg>
@@ -190,51 +111,14 @@ const canonical = canonicalUrl || Astro.url.href;
       </div>
 
       <!-- Mobile Nav -->
-      <div id="mobile-menu" class="hidden xl:hidden border-t border-[#eaeaea] bg-white max-h-[80vh] overflow-y-auto">
-        <div class="px-4 py-4 space-y-1">
-          <div class="mobile-group">
-            <button class="mobile-toggle">About Us <span class="mobile-arrow">+</span></button>
-            <div class="mobile-submenu">
-              <a href={`${mainSite}/pages/about-us/#vision`}>Our Vision</a>
-              <a href={`${mainSite}/pages/about-us/#team`}>Our Team</a>
-              <a href={`${mainSite}/pages/about-us/#backg`}>Our Background</a>
-            </div>
-          </div>
-          <div class="mobile-group">
-            <button class="mobile-toggle">Industries <span class="mobile-arrow">+</span></button>
-            <div class="mobile-submenu">
-              <a href={`${mainSite}/pages/industries/#cm`}>Capital Markets</a>
-              <a href={`${mainSite}/pages/industries/#ib`}>Investment Banking</a>
-              <a href={`${mainSite}/pages/industries/#wm`}>Wealth Management</a>
-              <a href={`${mainSite}/pages/industries/#cb`}>Commercial Banking</a>
-              <a href={`${mainSite}/pages/industries/#pay`}>Payments</a>
-              <a href={`${mainSite}/pages/industries/#ins`}>Insurance</a>
-              <a href={`${mainSite}/pages/industries/#health`}>Healthcare</a>
-              <a href={`${mainSite}/pages/industries/#ret`}>Retail</a>
-            </div>
-          </div>
-          <div class="mobile-group">
-            <button class="mobile-toggle">Expertise <span class="mobile-arrow">+</span></button>
-            <div class="mobile-submenu">
-              <a href={`${mainSite}/expertise/ai-ml/`}>AI/ML</a>
-              <a href={`${mainSite}/expertise/banking-regulatory-risk/`}>Banking & Capital Markets</a>
-              <a href={`${mainSite}/expertise/cloud-migration/`}>Cloud Enablement</a>
-              <a href={`${mainSite}/expertise/digital-transformation/`}>Digital Transformation</a>
-              <a href={`${mainSite}/pages/emerging-talents/`}>Emerging Talent</a>
-              <a href={`${mainSite}/expertise/cyber-security/`}>Cyber Security</a>
-            </div>
-          </div>
-          <div class="mobile-group">
-            <button class="mobile-toggle">Services <span class="mobile-arrow">+</span></button>
-            <div class="mobile-submenu">
-              <a href={`${mainSite}/services/project-service/`}>Project Service</a>
-              <a href={`${mainSite}/services/staffing-services/`}>Staffing Service</a>
-              <a href={`${mainSite}/services/captive-offshore-service/`}>Captive Offshore Service</a>
-            </div>
-          </div>
-          <a href={`${mainSite}/case-studies/`} class="block font-poppins text-sm font-medium text-[#334155] hover:text-euclid-teal py-3 border-b border-gray-100 uppercase">Case Studies</a>
-          <a href={`${mainSite}/pages/careers-in/`} class="block font-poppins text-sm font-medium text-[#334155] hover:text-euclid-teal py-3 border-b border-gray-100 uppercase">Careers</a>
-          <a href={`${mainSite}/pages/contactus/`} class="block text-center mt-3 px-5 py-2.5 bg-euclid-teal text-white font-poppins font-medium text-sm rounded-full hover:bg-euclid-teal-deep transition-colors">Contact Us</a>
+      <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 bg-white">
+        <div class="px-4 py-4 space-y-3">
+          <a href="/" class="block font-poppins text-sm font-medium text-gray-600 hover:text-euclid-teal">Home</a>
+          <a href="/category/ai-ml" class="block font-poppins text-sm font-medium text-gray-600 hover:text-euclid-teal">AI & ML</a>
+          <a href="/category/cloud" class="block font-poppins text-sm font-medium text-gray-600 hover:text-euclid-teal">Cloud</a>
+          <a href="/category/cybersecurity" class="block font-poppins text-sm font-medium text-gray-600 hover:text-euclid-teal">Cybersecurity</a>
+          <a href="/category/talent" class="block font-poppins text-sm font-medium text-gray-600 hover:text-euclid-teal">Talent</a>
+          <a href="https://euclidinnovations.com/pages/contactus/" target="_blank" class="btn-primary text-sm w-full justify-center">Get in Touch</a>
         </div>
       </div>
     </header>
@@ -244,97 +128,63 @@ const canonical = canonicalUrl || Astro.url.href;
       <slot />
     </main>
 
-    <!-- Footer — mirrors euclidinnovations.com -->
-    <footer class="mt-20">
-      <!-- Main footer -->
-      <div class="header-gradient-bg text-white">
-        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-14">
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-            <!-- Column 1: Links -->
-            <div>
-              <ul class="space-y-3 text-sm">
-                <li><a href={`${mainSite}/expertise/ai-ml/`} class="text-white/90 hover:text-white transition-colors">AI/ML</a></li>
-                <li><a href={`${mainSite}/expertise/banking-regulatory-risk/`} class="text-white/90 hover:text-white transition-colors">Banking</a></li>
-                <li><a href={`${mainSite}/expertise/cloud-migration/`} class="text-white/90 hover:text-white transition-colors">Cloud Solutions</a></li>
-                <li><a href={`${mainSite}/expertise/digital-transformation/`} class="text-white/90 hover:text-white transition-colors">Digital Transformation</a></li>
-              </ul>
-            </div>
-
-            <!-- Column 2: Links -->
-            <div>
-              <ul class="space-y-3 text-sm">
-                <li><a href={`${mainSite}/pages/about-us/`} class="text-white/90 hover:text-white transition-colors">Who we are</a></li>
-                <li><a href={`${mainSite}/pages/careers-in/`} class="text-white/90 hover:text-white transition-colors">Careers</a></li>
-                <li><a href={`${mainSite}/pages/contactus/`} class="text-white/90 hover:text-white transition-colors">Schedule a call</a></li>
-                <li><a href={`${mainSite}`} class="text-white/90 hover:text-white transition-colors">Brand Kit</a></li>
-              </ul>
-            </div>
-
-            <!-- Column 3: Newsletter -->
-            <div>
-              <h4 class="font-poppins font-semibold text-sm mb-4">Get latest jobs right in your inbox!</h4>
-              <form class="space-y-3">
-                <input
-                  type="email"
-                  placeholder="Email"
-                  class="w-full px-4 py-2.5 rounded border border-white/40 bg-transparent text-white placeholder-white/60 text-sm focus:outline-none focus:border-white"
-                />
-                <button type="submit" class="w-full px-4 py-2.5 rounded border border-white text-white font-poppins font-medium text-sm hover:bg-white/10 transition-colors">
-                  Signup
-                </button>
-              </form>
-            </div>
-
-            <!-- Column 4: Locations -->
-            <div class="space-y-4">
-              <div class="flex items-center justify-between text-sm">
-                <span class="text-white/90">Charlotte, US</span>
-                <span class="text-white/60 text-lg leading-none">+</span>
-              </div>
-              <div class="flex items-center justify-between text-sm">
-                <span class="text-white/90">Hyderabad, India</span>
-                <span class="text-white/60 text-lg leading-none">+</span>
-              </div>
-              <div class="flex items-center justify-between text-sm">
-                <span class="text-white/90">Bangalore, India</span>
-                <span class="text-white/60 text-lg leading-none">+</span>
+    <!-- Footer -->
+    <footer class="gradient-bg text-white mt-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+          <div class="md:col-span-2">
+            <div class="flex items-center gap-3 mb-4">
+              <img
+                src="http://euclidinnovations.com/wp-content/uploads/2023/01/cropped-Logo-Icon-Transparent-shadow.png"
+                alt="Euclid Innovations"
+                class="h-10 w-10 brightness-200"
+              />
+              <div>
+                <span class="font-poppins font-semibold text-white text-xl">Euclid</span>
+                <span class="font-poppins font-light text-euclid-cyan text-xl ml-1">Insights</span>
               </div>
             </div>
+            <p class="text-white/70 text-sm leading-relaxed max-w-md">
+              Thought leadership on AI, Cloud, Cybersecurity, and Digital Transformation from the experts at Euclid Innovations. Impactful Solutions. Elevated Tech Talent.
+            </p>
+          </div>
+          <div>
+            <h4 class="font-poppins font-semibold text-sm uppercase tracking-wider mb-4 text-euclid-cyan">Topics</h4>
+            <ul class="space-y-2 text-sm text-white/70">
+              <li><a href="/category/ai-ml" class="hover:text-white transition-colors">AI in Banking</a></li>
+              <li><a href="/category/digital-transformation" class="hover:text-white transition-colors">Digital Transformation</a></li>
+              <li><a href="/category/cloud" class="hover:text-white transition-colors">Cloud Enablement</a></li>
+              <li><a href="/category/cybersecurity" class="hover:text-white transition-colors">Cybersecurity</a></li>
+              <li><a href="/category/talent" class="hover:text-white transition-colors">AI Talent</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-poppins font-semibold text-sm uppercase tracking-wider mb-4 text-euclid-cyan">Company</h4>
+            <ul class="space-y-2 text-sm text-white/70">
+              <li><a href="https://euclidinnovations.com" target="_blank" class="hover:text-white transition-colors">Main Website</a></li>
+              <li><a href="https://euclidinnovations.com/pages/contactus/" target="_blank" class="hover:text-white transition-colors">Contact Us</a></li>
+              <li><a href="https://www.linkedin.com/company/euclidinnovations" target="_blank" class="hover:text-white transition-colors">LinkedIn</a></li>
+              <li><a href="/rss.xml" class="hover:text-white transition-colors">RSS Feed</a></li>
+            </ul>
           </div>
         </div>
-      </div>
-
-      <!-- Bottom copyright bar -->
-      <div class="bg-[#01332e] text-white/70">
-        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-center gap-3">
-          <p class="text-xs font-poppins">
-            &copy; {new Date().getFullYear()} | Euclid Innovations &ndash; All Rights Reserved.
+        <div class="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p class="text-white/50 text-xs">
+            &copy; {new Date().getFullYear()} Euclid Innovations. All rights reserved. Charlotte, NC | Hyderabad | Bangalore
           </p>
-          <div class="flex items-center gap-2 text-xs">
-            <span class="w-2.5 h-2.5 rounded-full bg-green-400 inline-block"></span>
-            <span class="text-green-400 font-poppins">All services are online</span>
+          <div class="flex gap-4">
+            <a href="https://www.linkedin.com/company/euclidinnovations" target="_blank" class="text-white/50 hover:text-euclid-cyan transition-colors" aria-label="LinkedIn">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            </a>
           </div>
         </div>
       </div>
     </footer>
 
-    <!-- Menu interactions -->
+    <!-- Mobile menu toggle -->
     <script>
-      // Mobile menu toggle
       document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
         document.getElementById('mobile-menu')?.classList.toggle('hidden');
-      });
-
-      // Mobile accordion submenus
-      document.querySelectorAll('.mobile-toggle').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const submenu = btn.nextElementSibling;
-          const arrow = btn.querySelector('.mobile-arrow');
-          if (submenu && arrow) {
-            submenu.classList.toggle('hidden');
-            arrow.textContent = submenu.classList.contains('hidden') ? '+' : '-';
-          }
-        });
       });
     </script>
   </body>
