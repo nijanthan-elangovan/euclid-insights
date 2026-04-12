@@ -1,0 +1,402 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { assertMicrosoftPreviewConfig, getPreviewSession } from '../../lib/microsoft-auth';
+import { getUserRole, listArticles, listMediaAssets } from '../../lib/store';
+
+export const prerender = false;
+
+try {
+  assertMicrosoftPreviewConfig();
+} catch (configError) {
+  return new Response((configError as Error).message, { status: 500 });
+}
+
+const session = getPreviewSession(Astro.cookies);
+if (!session) {
+  const loginUrl = new URL('/auth/microsoft/login', Astro.url);
+  loginUrl.searchParams.set('returnTo', Astro.url.pathname);
+  return Astro.redirect(`${loginUrl.pathname}${loginUrl.search}`);
+}
+
+if (getUserRole(session.email) !== 'admin') {
+  return new Response('Admin access required', { status: 403 });
+}
+
+const initialArticles = listArticles();
+const initialMedia = listMediaAssets('all');
+---
+
+<BaseLayout title="Admin dashboard">
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+      <div>
+        <h1 class="text-3xl font-poppins font-bold text-euclid-navy">Admin dashboard</h1>
+        <p class="text-sm text-gray-600 mt-1">
+          Signed in as <span class="font-semibold">{session.name}</span> ({session.email})
+        </p>
+      </div>
+      <div class="flex gap-3">
+        <a href="/" class="btn-outline text-sm">Back to site</a>
+        <a href="/auth/microsoft/logout" class="btn-primary text-sm">Logout</a>
+      </div>
+    </div>
+
+    <div id="admin-flash" class="hidden mb-6 rounded-xl px-4 py-3 text-sm font-poppins"></div>
+
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div class="xl:col-span-2 space-y-6">
+        <div class="card !p-6">
+          <h2 class="text-xl font-poppins font-semibold text-euclid-navy mb-4">Create article</h2>
+          <form id="create-article-form" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <input id="create-title" type="text" placeholder="Title*" class="border border-gray-200 rounded-lg px-3 py-2 text-sm" required />
+            <input id="create-slug" type="text" placeholder="Slug (optional)" class="border border-gray-200 rounded-lg px-3 py-2 text-sm" />
+            <input id="create-category" type="text" placeholder="Category (default ai-ml)" class="border border-gray-200 rounded-lg px-3 py-2 text-sm" />
+            <select id="create-status" class="border border-gray-200 rounded-lg px-3 py-2 text-sm">
+              <option value="draft">draft</option>
+              <option value="review">review</option>
+              <option value="scheduled">scheduled</option>
+              <option value="published">published</option>
+            </select>
+            <button type="submit" class="btn-primary text-sm md:col-span-2 justify-center">Create article</button>
+          </form>
+        </div>
+
+        <div class="card !p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-poppins font-semibold text-euclid-navy">Articles</h2>
+            <button id="refresh-articles" class="btn-outline text-sm">Refresh</button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-[900px] text-sm">
+              <thead>
+                <tr class="text-left border-b border-gray-200">
+                  <th class="py-2 pr-3">Title</th>
+                  <th class="py-2 pr-3">Slug</th>
+                  <th class="py-2 pr-3">Status</th>
+                  <th class="py-2 pr-3">Pub date</th>
+                  <th class="py-2 pr-3">Preview token</th>
+                  <th class="py-2 pr-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="articles-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <div class="card !p-6">
+          <h2 class="text-xl font-poppins font-semibold text-euclid-navy mb-4">Upload media</h2>
+          <form id="upload-media-form" class="space-y-3">
+            <select id="media-bucket" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
+              <option value="articles">articles</option>
+              <option value="covers">covers</option>
+            </select>
+            <input id="media-filename" type="text" placeholder="File name (optional)" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm" />
+            <input id="media-file" type="file" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm" required />
+            <button type="submit" class="btn-primary text-sm w-full justify-center">Upload</button>
+          </form>
+        </div>
+
+        <div class="card !p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-poppins font-semibold text-euclid-navy">Media assets</h2>
+            <button id="refresh-media" class="btn-outline text-sm">Refresh</button>
+          </div>
+          <div class="space-y-3 max-h-[460px] overflow-y-auto" id="media-list"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script define:vars={{ initialArticles, initialMedia }}>
+    let articles = initialArticles;
+    let mediaAssets = initialMedia;
+
+    const flash = document.getElementById('admin-flash');
+    const articlesBody = document.getElementById('articles-table-body');
+    const mediaList = document.getElementById('media-list');
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function showMessage(message, kind = 'success') {
+      flash.classList.remove('hidden', 'bg-emerald-50', 'text-emerald-700', 'bg-red-50', 'text-red-700');
+      if (kind === 'error') {
+        flash.classList.add('bg-red-50', 'text-red-700');
+      } else {
+        flash.classList.add('bg-emerald-50', 'text-emerald-700');
+      }
+      flash.textContent = message;
+      setTimeout(() => flash.classList.add('hidden'), 3500);
+    }
+
+    function renderArticles() {
+      articlesBody.innerHTML = articles.map((article) => `
+        <tr class="border-b border-gray-100 align-top">
+          <td class="py-2 pr-3">
+            <input class="article-title border border-gray-200 rounded-md px-2 py-1 w-64" data-slug="${escapeHtml(article.slug)}" value="${escapeHtml(article.title)}" />
+          </td>
+          <td class="py-2 pr-3">
+            <a class="text-euclid-teal underline" target="_blank" href="/preview/${escapeHtml(article.previewToken || '')}">${escapeHtml(article.slug)}</a>
+          </td>
+          <td class="py-2 pr-3">
+            <select class="article-status border border-gray-200 rounded-md px-2 py-1" data-slug="${escapeHtml(article.slug)}">
+              ${['draft', 'review', 'scheduled', 'published'].map((status) =>
+                `<option value="${status}" ${article.status === status ? 'selected' : ''}>${status}</option>`
+              ).join('')}
+            </select>
+          </td>
+          <td class="py-2 pr-3">
+            <input type="date" class="article-pubdate border border-gray-200 rounded-md px-2 py-1" data-slug="${escapeHtml(article.slug)}" value="${escapeHtml((article.pubDate || '').slice(0, 10))}" />
+          </td>
+          <td class="py-2 pr-3">
+            <input class="article-preview-token border border-gray-200 rounded-md px-2 py-1 w-56" data-slug="${escapeHtml(article.slug)}" value="${escapeHtml(article.previewToken || '')}" />
+          </td>
+          <td class="py-2 pr-3 space-x-2 whitespace-nowrap">
+            <button class="save-article px-2 py-1 rounded bg-indigo-600 text-white" data-slug="${escapeHtml(article.slug)}">Save</button>
+            <button class="publish-article px-2 py-1 rounded bg-emerald-600 text-white" data-slug="${escapeHtml(article.slug)}">Publish</button>
+            <button class="unpublish-article px-2 py-1 rounded bg-amber-600 text-white" data-slug="${escapeHtml(article.slug)}">Unpublish</button>
+            <button class="delete-article px-2 py-1 rounded bg-red-600 text-white" data-slug="${escapeHtml(article.slug)}">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+
+      bindArticleActions();
+    }
+
+    function renderMedia() {
+      mediaList.innerHTML = mediaAssets.map((asset) => `
+        <div class="border border-gray-200 rounded-xl p-3">
+          <p class="text-xs text-gray-500 mb-1">${escapeHtml(asset.bucket)}</p>
+          <p class="text-sm font-medium text-gray-800 break-all">${escapeHtml(asset.fileName)}</p>
+          <p class="text-xs text-gray-500 mt-1">${Math.round(asset.size / 1024)} KB</p>
+          <div class="mt-2 flex gap-2">
+            <button class="copy-media-path text-xs px-2 py-1 rounded bg-gray-100 hover:bg-gray-200" data-path="${escapeHtml(asset.publicPath)}">Copy path</button>
+            <button class="delete-media text-xs px-2 py-1 rounded bg-red-600 text-white" data-path="${escapeHtml(asset.publicPath)}">Delete</button>
+          </div>
+        </div>
+      `).join('');
+
+      bindMediaActions();
+    }
+
+    async function fetchJson(url, init = {}) {
+      const res = await fetch(url, init);
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+      return data;
+    }
+
+    async function refreshArticles() {
+      const data = await fetchJson('/api/admin/articles');
+      articles = data.articles || [];
+      renderArticles();
+    }
+
+    async function refreshMedia() {
+      const data = await fetchJson('/api/admin/media?bucket=all');
+      mediaAssets = data.assets || [];
+      renderMedia();
+    }
+
+    function getArticleField(selector, slug) {
+      return document.querySelector(`${selector}[data-slug="${slug}"]`);
+    }
+
+    function bindArticleActions() {
+      document.querySelectorAll('.save-article').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const slug = btn.dataset.slug;
+          const payload = {
+            title: getArticleField('.article-title', slug).value,
+            status: getArticleField('.article-status', slug).value,
+            pubDate: getArticleField('.article-pubdate', slug).value,
+            previewToken: getArticleField('.article-preview-token', slug).value,
+          };
+          try {
+            await fetchJson(`/api/admin/articles/${slug}`, {
+              method: 'PATCH',
+              headers: { 'content-type': 'application/json' },
+              body: JSON.stringify(payload),
+            });
+            showMessage(`Saved ${slug}`);
+            await refreshArticles();
+          } catch (error) {
+            showMessage(error.message, 'error');
+          }
+        });
+      });
+
+      document.querySelectorAll('.publish-article').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const slug = btn.dataset.slug;
+          const pubDate = getArticleField('.article-pubdate', slug).value;
+          try {
+            await fetchJson(`/api/admin/articles/${slug}`, {
+              method: 'POST',
+              headers: { 'content-type': 'application/json' },
+              body: JSON.stringify({ action: 'publish', pubDate }),
+            });
+            showMessage(`Published ${slug}`);
+            await refreshArticles();
+          } catch (error) {
+            showMessage(error.message, 'error');
+          }
+        });
+      });
+
+      document.querySelectorAll('.unpublish-article').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const slug = btn.dataset.slug;
+          try {
+            await fetchJson(`/api/admin/articles/${slug}`, {
+              method: 'POST',
+              headers: { 'content-type': 'application/json' },
+              body: JSON.stringify({ action: 'unpublish' }),
+            });
+            showMessage(`Unpublished ${slug}`);
+            await refreshArticles();
+          } catch (error) {
+            showMessage(error.message, 'error');
+          }
+        });
+      });
+
+      document.querySelectorAll('.delete-article').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const slug = btn.dataset.slug;
+          if (!confirm(`Delete article "${slug}"?`)) return;
+          try {
+            await fetchJson(`/api/admin/articles/${slug}`, { method: 'DELETE' });
+            showMessage(`Deleted ${slug}`);
+            await refreshArticles();
+          } catch (error) {
+            showMessage(error.message, 'error');
+          }
+        });
+      });
+    }
+
+    function bindMediaActions() {
+      document.querySelectorAll('.delete-media').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const publicPath = btn.dataset.path;
+          if (!confirm(`Delete media "${publicPath}"?`)) return;
+          try {
+            await fetchJson('/api/admin/media', {
+              method: 'DELETE',
+              headers: { 'content-type': 'application/json' },
+              body: JSON.stringify({ publicPath }),
+            });
+            showMessage(`Deleted ${publicPath}`);
+            await refreshMedia();
+          } catch (error) {
+            showMessage(error.message, 'error');
+          }
+        });
+      });
+
+      document.querySelectorAll('.copy-media-path').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const publicPath = btn.dataset.path;
+          await navigator.clipboard.writeText(publicPath);
+          showMessage('Copied media path');
+        });
+      });
+    }
+
+    document.getElementById('refresh-articles').addEventListener('click', async () => {
+      try {
+        await refreshArticles();
+        showMessage('Articles refreshed');
+      } catch (error) {
+        showMessage(error.message, 'error');
+      }
+    });
+
+    document.getElementById('refresh-media').addEventListener('click', async () => {
+      try {
+        await refreshMedia();
+        showMessage('Media refreshed');
+      } catch (error) {
+        showMessage(error.message, 'error');
+      }
+    });
+
+    document.getElementById('create-article-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const title = document.getElementById('create-title').value.trim();
+      const slug = document.getElementById('create-slug').value.trim();
+      const category = document.getElementById('create-category').value.trim();
+      const status = document.getElementById('create-status').value;
+      if (!title) {
+        showMessage('Title is required', 'error');
+        return;
+      }
+
+      try {
+        await fetchJson('/api/admin/articles', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ title, slug: slug || undefined, category: category || undefined, status }),
+        });
+        event.target.reset();
+        showMessage('Article created');
+        await refreshArticles();
+      } catch (error) {
+        showMessage(error.message, 'error');
+      }
+    });
+
+    document.getElementById('upload-media-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const bucket = document.getElementById('media-bucket').value;
+      const fileInput = document.getElementById('media-file');
+      const fileNameInput = document.getElementById('media-filename');
+      const file = fileInput.files?.[0];
+      if (!file) {
+        showMessage('Please select a file', 'error');
+        return;
+      }
+
+      const fileName = (fileNameInput.value || file.name).trim();
+      const base64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = String(reader.result || '');
+          const payload = result.includes(',') ? result.split(',')[1] : result;
+          resolve(payload);
+        };
+        reader.onerror = () => reject(new Error('Unable to read file'));
+        reader.readAsDataURL(file);
+      });
+
+      try {
+        await fetchJson('/api/admin/media', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            bucket,
+            fileName,
+            contentBase64: base64,
+          }),
+        });
+        event.target.reset();
+        showMessage('Media uploaded');
+        await refreshMedia();
+      } catch (error) {
+        showMessage(error.message, 'error');
+      }
+    });
+
+    renderArticles();
+    renderMedia();
+  </script>
+</BaseLayout>
