@@ -1,0 +1,46 @@
+# Euclid Insights - AI Agent Instructions
+
+You are working on Euclid Insights, a thought leadership blog for Euclid Innovations. Read CLAUDE.md for the complete reference guide. Key rules summarized here:
+
+## Writing Style (Google Developer Documentation Style)
+- Sentence-case headings: "The business case for cloud"
+- Second person: "you/your" — not "organizations" abstractly
+- Active voice, present tense
+- Cut filler words (actually, basically, simply)
+- Bold for key term introduction only
+
+## Brand Colors (Tailwind)
+- Primary: euclid-teal (#0AB3B3), euclid-navy (#273171)
+- Dark: euclid-teal-dark (#014745), euclid-gray-dark (#2D2D2D)
+- Light: euclid-cyan (#D3FFFE), euclid-gray-light (#F7F8FA)
+- Accent: euclid-green (#61CE70)
+
+## Fonts
+- Headings/nav: Poppins (font-poppins)
+- Body: Roboto (font-roboto)
+- Blockquotes: Roboto Slab (font-roboto-slab)
+
+## Cover Images
+- Flat geometric monochromatic SVG illustrations with grain texture
+- 800x450 viewBox, single hue per article, stored in public/images/covers/
+- Used colors: purple, green, red, blue, orange
+
+## Stock Images
+- Download from Unsplash/Pexels, store locally in public/images/articles/
+- Never hotlink external images
+- Use: `<img src="/images/articles/name.jpg" alt="..." class="rounded-2xl my-10 w-full" />`
+
+## Logos
+- Header navbar: Logo-Icon-Transparent-BG.png (original)
+- Footer/favicon/structured data: cropped-Logo-Icon-Transparent-shadow.png
+
+## Dark Sections in Articles
+- Always add `not-prose` class to dark-background containers in MDX
+- Without it, prose styles override text to dark gray
+
+## Tech Stack
+- Astro (hybrid SSR) + @astrojs/node adapter
+- Tailwind CSS, MDX content collections
+- Microsoft SSO (process.env, not import.meta.env)
+- PM2 + Nginx on Azure VM
+- GitHub Actions CI/CD on push to master
