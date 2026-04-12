@@ -144,6 +144,11 @@
   color: #045cb4;
 }
 
+/* Header/footer teal gradient (matches main site) */
+.header-gradient-bg {
+  background: linear-gradient(90deg, #014745 0%, #0AB3B3 50%, #014745 100%);
+}
+
 /* Animated gradient background */
 .gradient-bg {
   background: linear-gradient(135deg, #014745 0%, #273171 50%, #0AB3B3 100%);
