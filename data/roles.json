@@ -1,6 +1,7 @@
 {
   "roles": {
-    "nijanthan@euclidinnovations.com": "admin"
+    "nijanthan@euclidinnovations.com": "admin",
+    "nijanthan.elangovan@euclidinnovations.com": "admin"
   },
   "defaultRole": "reviewer"
 }
